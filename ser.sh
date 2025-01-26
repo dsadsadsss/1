@@ -5,7 +5,11 @@ result=$(echo '#!/bin/bash\necho "hello"' > hello.sh && chmod +x hello.sh && ./h
 
 # 检查结果中是否包含 "denied"
 if [[ "$result" == *denied* ]]; then
+ echo ""
+ echo ""
   echo "权限未开启，已经自动为你开启，请断开连接重新SSH登陆"
+  echo ""
+  echo ""
   devil binexec on
 else
   echo "权限已开启"
