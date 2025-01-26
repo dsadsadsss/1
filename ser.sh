@@ -5,6 +5,8 @@ if test -x .; then
 else 
  devil binexec on
  echo "echo "权限未开，已帮你开启权限，需退出重新连接ssh"
+ sleep 10
+ exit
 fi
 if devil port list 2>&1 | grep -q "No elements"; then
  devil port add TCP random
