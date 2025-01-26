@@ -108,7 +108,7 @@ else
  export VM_PORT=$port1 #vmes 端口
  export SERVER_PORT=$port2
  export second_port=$port3
- echo "已开端口：$VM_PORT $SERVER_PORT $second"
+ echo "已开端口：$VM_PORT $SERVER_PORT $second_port"
 fi
 
 
