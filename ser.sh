@@ -1,4 +1,63 @@
 #!/bin/bash 
+if devil port add TCP random 2>&1 | grep -q "exceeded"; then
+  echo " 端口已开"
+else
+devil port add TCP random
+sleep3
+devil port add TCP random
+sleep3
+fi
+
+port1=$(devil port list | awk '
+{
+    if (match($0, /[0-9]{3,6}/)) {
+        if (count == 0) {
+            num1 = substr($0, RSTART, RLENGTH)
+            print num1
+            exit
+        }
+        count++
+    } else {
+        if(count > 0){
+            count = 0;
+            exit
+        }
+    }
+    if (count >= 3) {
+       count = 0;
+       exit
+    }
+}
+')
+port2=$(devil port list | awk '
+{
+    if (match($0, /[0-9]{3,6}/)) {
+        if (count == 0) {
+            num1 = substr($0, RSTART, RLENGTH)
+        } else if (count == 1){
+            num2 = substr($0, RSTART, RLENGTH)
+            print num2
+            exit
+        }
+        count++
+    } else {
+         if(count > 1){
+           count = 0;
+            exit
+        }else if (count >0){
+           count = 0;
+           exit
+       }
+    }
+    if (count >= 3) {
+        
+       exit
+    }
+}
+')
+
+devil binexec on
+sleep3
 
 # 哪吒相关设置
 #export NEZHA_SERVER=${NEZHA_SERVER:-''}
@@ -8,8 +67,8 @@
 
 # 节点相关设置(节点可在worlds文件里list.log查看)
 export TMP_ARGO=${TMP_ARGO:-'vms'}  # 节点类型,可选vls,vms
-#export VL_PORT=${VL_PORT:-'8002'} #vles 端口
-#export VM_PORT=${VM_PORT:-'8001'} #vmes 端口
+export VL_PORT=$port1 #vles 端口
+export VM_PORT=$port2 #vmes 端口
 #export CF_IP=${CF_IP:-'ip.sb'}  # cf优选域名或ip
 export TMPDIR=$PWD
 
