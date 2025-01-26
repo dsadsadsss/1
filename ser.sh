@@ -17,7 +17,7 @@ else
   rm hello.sh
 fi
 export TMP_ARGO=${TMP_ARGO:-'vms'}
-if devil port list 2>&1 | grep -q "No elements"; then
+if devil port list 2>&1 | grep -q "elements"; then
 if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
 devil port add TCP random
 devil port add TCP random
@@ -54,6 +54,15 @@ port3=$(devil port list | awk '
 ')
 fi
 else
+
+tcp_ports=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH)}}')
+while IFS= read -r tcp_port; do
+  devil port del TCP "$tcp_port"
+done <<< "$tcp_ports"
+udp_ports=$(devil port list | awk '/udp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH)}}')
+while IFS= read -r udp_port; do
+  devil port del UDP "$udp_port"
+done <<< "$udp_ports"
 if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
 devil port add TCP random
 devil port add TCP random
