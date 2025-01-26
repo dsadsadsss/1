@@ -16,7 +16,7 @@ else
   echo "权限已开启"
   rm hello.sh
 fi
-export TMP_ARGO=${TMP_ARGO:-'vms'}
+export TMP_ARGO=${TMP_ARGO:-'3x'}
 if devil port list 2>&1 | grep -q "elements"; then
 if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
 devil port add TCP random
