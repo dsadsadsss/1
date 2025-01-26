@@ -1,11 +1,17 @@
 #!/bin/bash 
 # 节点相关设置(节点可在worlds文件里list.log查看)
-if devil binexec status 2>&1 | grep -q "Ok"; then
-echo "权限已开启"
+
+result=$(echo '#!/bin/bash\necho "hello"' > hello.sh && chmod +x hello.sh && ./hello.sh 2>&1)
+
+# 检查结果中是否包含 "Permission denied"
+if [[ "$result" == *Permission\ denied* ]]; then
+  echo "权限未开启，已经自动为你开启，请断开连接重新SSH登陆"
+  devil binexec on
 else
-echo "权限未开启，已经自动为你开启，请断开连接重新SSH登陆"
- devil binexec on
+  echo "权限已开启"
+  rm hello.sh
 fi
+
 if devil port list 2>&1 | grep -q "No elements"; then
  devil port add TCP random
  port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
