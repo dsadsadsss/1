@@ -3,9 +3,9 @@ if devil port add TCP random 2>&1 | grep -q "exceeded"; then
   echo " 端口已开"
 else
 devil port add TCP random
-sleep3
+sleep 3
 devil port add TCP random
-sleep3
+sleep 3
 fi
 
 port1=$(devil port list | awk '
@@ -57,7 +57,6 @@ port2=$(devil port list | awk '
 ')
 
 devil binexec on
-sleep3
 
 # 节点相关设置(节点可在worlds文件里list.log查看)
 export TMP_ARGO=${TMP_ARGO:-'vms'}  # 节点类型,可选vls,vms
