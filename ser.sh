@@ -3,8 +3,8 @@
 
 result=$(echo '#!/bin/bash\necho "hello"' > hello.sh && chmod +x hello.sh && ./hello.sh 2>&1)
 
-# 检查结果中是否包含 "Permission denied"
-if [[ "$result" == *Permission\ denied* ]]; then
+# 检查结果中是否包含 "denied"
+if [[ "$result" == *denied* ]]; then
   echo "权限未开启，已经自动为你开启，请断开连接重新SSH登陆"
   devil binexec on
 else
