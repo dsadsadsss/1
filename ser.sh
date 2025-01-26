@@ -1,13 +1,14 @@
 #!/bin/bash 
 # 节点相关设置(节点可在worlds文件里list.log查看)
-if test -x .; then
+if test -x . ; then
     echo "已开启权限"
 else 
  devil binexec on
- echo "echo "权限未开，已帮你开启权限，需退出重新连接ssh"
+ echo "echo "权限未开，已帮你开启权限，需退出重新连接ssh""
  sleep 10
  exit
 fi
+
 if devil port list 2>&1 | grep -q "No elements"; then
  devil port add TCP random
  port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
