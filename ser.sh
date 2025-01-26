@@ -42,7 +42,7 @@ else
   fi
   done
 fi
-export TMP_ARGO=${TMP_ARGO:-'3x'}
+export TMP_ARGO=${TMP_ARGO:-'xhttp'}
 if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
  export VL_PORT=$port1 #vles 端口
  export VM_PORT=$port2 #vmes 端口
