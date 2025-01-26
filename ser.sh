@@ -42,6 +42,7 @@ else
   fi
   done
 fi
+export TMP_ARGO=${TMP_ARGO:-'3x'}
 if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
  export VL_PORT=$port1 #vles 端口
  export VM_PORT=$port2 #vmes 端口
@@ -49,7 +50,7 @@ else
  export VM_PORT=$port1 #vmes 端口
  export SERVER_PORT=$port2
 fi
-export TMP_ARGO=${TMP_ARGO:-'3x'}
+
 cd ./domains
 export TMPDIR=$PWD
 # 启动程序
