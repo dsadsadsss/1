@@ -84,10 +84,12 @@ port2=$(devil port list | awk '
 ')
 else
 devil port add TCP random
+devil port add UDP random
+devil port add UDP random
 port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
-devil port add UDP random
+
 port2=$(devil port list | awk '/udp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
-devil port add UDP random
+
 port3=$(devil port list | awk '
 /udp/ {
     count++;
