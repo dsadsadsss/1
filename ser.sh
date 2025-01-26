@@ -16,47 +16,88 @@ else
   echo "权限已开启"
   rm hello.sh
 fi
-
-if devil port list 2>&1 | grep -q "No elements"; then
- devil port add TCP random
- port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
- while true; do
- devil port add UDP random
- port2=$(devil port list | awk '/udp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
- if devil port add TCP $port2 2>&1 | grep -q "exists"; then
- devil port del UDP $port2
- else
-  break
- fi
- done
-else
-  tcp_ports=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH)}}')
-  while IFS= read -r tcp_port; do
-  devil port del TCP "$tcp_port" > /dev/null 2>&1 &
-  done <<< "$tcp_ports"
-  udp_ports=$(devil port list | awk '/udp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH)}}')
-  while IFS= read -r udp_port; do
-   devil port del UDP "$udp_port" > /dev/null 2>&1 &
-  done <<< "$udp_ports"
-   devil port add TCP random
-  port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
-  while true; do
-  devil port add UDP random
-  port2=$(devil port list | awk '/udp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
-  if devil port add TCP $port2 2>&1 | grep -q "exists"; then
-  devil port del UDP $port2
-  else
-   break
-  fi
-  done
-fi
 export TMP_ARGO=${TMP_ARGO:-'vms'}
+if devil port list 2>&1 | grep -q "No elements"; then
+if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
+devil port add TCP random
+devil port add TCP random
+port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
+port2=$(devil port list | awk '
+/tcp/ {
+    count++;
+    if (count == 2) {
+        match($0, /[0-9]{3,}/);
+        if(RSTART) {
+            print substr($0, RSTART, RLENGTH);
+            exit
+        }
+    }
+}
+')
+else
+devil port add TCP random
+port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
+devil port add UDP random
+port2=$(devil port list | awk '/udp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
+devil port add UDP random
+port3=$(devil port list | awk '
+/udp/ {
+    count++;
+    if (count == 2) {
+        match($0, /[0-9]{3,}/);
+        if(RSTART) {
+            print substr($0, RSTART, RLENGTH);
+            exit
+        }
+    }
+}
+')
+fi
+else
+if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
+devil port add TCP random
+devil port add TCP random
+port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
+port2=$(devil port list | awk '
+/tcp/ {
+    count++;
+    if (count == 2) {
+        match($0, /[0-9]{3,}/);
+        if(RSTART) {
+            print substr($0, RSTART, RLENGTH);
+            exit
+        }
+    }
+}
+')
+else
+devil port add TCP random
+port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
+devil port add UDP random
+port2=$(devil port list | awk '/udp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
+devil port add UDP random
+port3=$(devil port list | awk '
+/udp/ {
+    count++;
+    if (count == 2) {
+        match($0, /[0-9]{3,}/);
+        if(RSTART) {
+            print substr($0, RSTART, RLENGTH);
+            exit
+        }
+    }
+}
+')
+fi
+fi
+
 if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
  export VL_PORT=$port1 #vles 端口
  export VM_PORT=$port2 #vmes 端口
 else
  export VM_PORT=$port1 #vmes 端口
  export SERVER_PORT=$port2
+ export second_port=$port3
 fi
 
 
