@@ -1,6 +1,7 @@
 #!/bin/bash 
 # 节点相关设置(节点可在worlds文件里list.log查看)
-cd ./domains/
+cd ./domains/$(whoami).serv00.net
+sleep 3
 if test -x . ; then
     echo "已开启权限"
 else 
