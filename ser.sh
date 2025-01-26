@@ -1,4 +1,7 @@
 #!/bin/bash 
+# 节点相关设置(节点可在worlds文件里list.log查看)
+export TMP_ARGO=${TMP_ARGO:-'vms'}  # 节点类型,可选vls,vms
+if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
 if devil port add TCP random 2>&1 | grep -q "exceeded"; then
   echo " 端口已开"
 else
@@ -7,51 +10,20 @@ sleep 3
 devil port add TCP random
 sleep 3
 fi
-
-port1=$(devil port list | awk '
-{
-    if (match($0, /[0-9]{3,6}/)) {
-        if (count == 0) {
-            num1 = substr($0, RSTART, RLENGTH)
-            print num1
-            exit
-        }
-        count++
-    } else {
-        if(count > 0){
-            count = 0;
-            exit
-        }
-    }
-    if (count >= 3) {
-       count = 0;
-       exit
-    }
-}
-')
+else
+devil port add TCP random
+devil port add UDP random
+fi
+port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
 port2=$(devil port list | awk '
-{
-    if (match($0, /[0-9]{3,6}/)) {
-        if (count == 0) {
-            num1 = substr($0, RSTART, RLENGTH)
-        } else if (count == 1){
-            num2 = substr($0, RSTART, RLENGTH)
-            print num2
+/tcp/ {
+    count++;
+    if (count == 2) {
+        match($0, /[0-9]{3,}/);
+        if(RSTART) {
+            print substr($0, RSTART, RLENGTH);
             exit
         }
-        count++
-    } else {
-         if(count > 1){
-           count = 0;
-            exit
-        }else if (count >0){
-           count = 0;
-           exit
-       }
-    }
-    if (count >= 3) {
-        
-       exit
     }
 }
 ')
@@ -66,10 +38,14 @@ else
 fi
 
 
-# 节点相关设置(节点可在worlds文件里list.log查看)
-export TMP_ARGO=${TMP_ARGO:-'vms'}  # 节点类型,可选vls,vms
+
+if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
 export VL_PORT=$port1 #vles 端口
 export VM_PORT=$port2 #vmes 端口
+else
+export VM_PORT=$port2 #vmes 端口
+export SERVER_PORT=$port1
+fi
 export TMPDIR=$PWD
 
 # 启动程序
