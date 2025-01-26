@@ -103,10 +103,12 @@ fi
 if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
  export VL_PORT=$port1 #vles 端口
  export VM_PORT=$port2 #vmes 端口
+ echo "已开端口：$VM_PORT $VL_PORT"
 else
  export VM_PORT=$port1 #vmes 端口
  export SERVER_PORT=$port2
  export second_port=$port3
+ echo "已开端口：$VM_PORT $SERVER_PORT $second"
 fi
 
 
