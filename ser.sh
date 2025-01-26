@@ -21,6 +21,7 @@ if devil port list 2>&1 | grep -q "elements"; then
 if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
 devil port add TCP random
 devil port add TCP random
+devil port add TCP random
 port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
 port2=$(devil port list | awk '
 /tcp/ {
@@ -38,23 +39,47 @@ else
 devil port add TCP random
 devil port add UDP random
 devil port add UDP random
-
-port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
-
-port2=$(devil port list | awk '/udp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
-
-port3=$(devil port list | awk '
-/udp/ {
-    count++;
-    if (count == 2) {
-        match($0, /[0-9]{3,}/);
-        if(RSTART) {
-            print substr($0, RSTART, RLENGTH);
-            exit
-        }
+# 使用 awk 提取端口并赋值给变量
+readarray -t ports < <(devil port list | awk '
+  /tcp/ && !found_tcp {
+    match($0, /[0-9]{3,7}/);
+    if (RSTART) {
+      port1 = substr($0, RSTART, RLENGTH);
+      found_tcp = 1;
+      print "port1:" port1
     }
-}
+  }
+  /udp/ {
+      udp_count++;
+      match($0, /[0-9]{3,7}/);
+      if (RSTART) {
+        if(udp_count == 1) {
+          port2 = substr($0, RSTART, RLENGTH);
+          print "port2:" port2;
+        } else if (udp_count == 2) {
+          port3 = substr($0, RSTART, RLENGTH);
+          print "port3:" port3;
+        }
+      }
+  }
+  END {
+      if(!port1) print "port1:";
+      if(!port2) print "port2:";
+      if(!port3) print "port3:";
+    }
 ')
+
+# 使用循环提取变量值
+for port in "${ports[@]}"; do
+    IFS=: read -r key value <<< "$port"
+    if [[ $key == "port1" ]]; then
+        port1="$value"
+    elif [[ $key == "port2" ]]; then
+        port2="$value"
+    elif [[ $key == "port3" ]]; then
+        port3="$value"
+    fi
+done
 fi
 else
 
@@ -69,6 +94,7 @@ done <<< "$udp_ports"
 if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
 devil port add TCP random
 devil port add TCP random
+devil port add TCP random
 port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
 port2=$(devil port list | awk '
 /tcp/ {
@@ -86,22 +112,48 @@ else
 devil port add TCP random
 devil port add UDP random
 devil port add UDP random
-port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
-
-port2=$(devil port list | awk '/udp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
-
-port3=$(devil port list | awk '
-/udp/ {
-    count++;
-    if (count == 2) {
-        match($0, /[0-9]{3,}/);
-        if(RSTART) {
-            print substr($0, RSTART, RLENGTH);
-            exit
-        }
+# 使用 awk 提取端口并赋值给变量
+readarray -t ports < <(devil port list | awk '
+  /tcp/ && !found_tcp {
+    match($0, /[0-9]{3,7}/);
+    if (RSTART) {
+      port1 = substr($0, RSTART, RLENGTH);
+      found_tcp = 1;
+      print "port1:" port1
     }
-}
+  }
+  /udp/ {
+      udp_count++;
+      match($0, /[0-9]{3,7}/);
+      if (RSTART) {
+        if(udp_count == 1) {
+          port2 = substr($0, RSTART, RLENGTH);
+          print "port2:" port2;
+        } else if (udp_count == 2) {
+          port3 = substr($0, RSTART, RLENGTH);
+          print "port3:" port3;
+        }
+      }
+  }
+  END {
+      if(!port1) print "port1:";
+      if(!port2) print "port2:";
+      if(!port3) print "port3:";
+    }
 ')
+
+# 使用循环提取变量值
+for port in "${ports[@]}"; do
+    IFS=: read -r key value <<< "$port"
+    if [[ $key == "port1" ]]; then
+        port1="$value"
+    elif [[ $key == "port2" ]]; then
+        port2="$value"
+    elif [[ $key == "port3" ]]; then
+        port3="$value"
+    fi
+done
+
 fi
 fi
 
