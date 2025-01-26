@@ -55,8 +55,16 @@ port2=$(devil port list | awk '
     }
 }
 ')
+if test -x .; then
+  echo "当前目录已开启执行权限"
+else
+  echo "当前目录未开启执行权限，将自动为你开启"
+  devil binexec on
+  echo "权限已开启，请关闭ssh连接，再重新连接"
+  sleep 10
+  exit
+fi
 
-devil binexec on
 
 # 节点相关设置(节点可在worlds文件里list.log查看)
 export TMP_ARGO=${TMP_ARGO:-'vms'}  # 节点类型,可选vls,vms
