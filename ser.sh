@@ -11,6 +11,7 @@ if [[ "$result" == *denied* ]]; then
   echo ""
   echo ""
   devil binexec on
+  exit 0
 else
   echo "权限已开启"
   rm hello.sh
