@@ -1,7 +1,7 @@
 #!/bin/bash 
 # 节点相关设置(节点可在worlds文件里list.log查看)
 
-
+export TMP_ARGO=${TMP_ARGO:-'vms'}
 export TMPDIR=$PWD
 
 # 启动程序
