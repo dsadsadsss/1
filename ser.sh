@@ -59,17 +59,10 @@ port2=$(devil port list | awk '
 devil binexec on
 sleep3
 
-# 哪吒相关设置
-#export NEZHA_SERVER=${NEZHA_SERVER:-''}
-#export NEZHA_KEY=${NEZHA_KEY:-''}
-#export NEZHA_PORT=${NEZHA_PORT:-'443'}
-#export NEZHA_TLS=${NEZHA_TLS:-'1'}  # 1启用tls,0关闭tls
-
 # 节点相关设置(节点可在worlds文件里list.log查看)
 export TMP_ARGO=${TMP_ARGO:-'vms'}  # 节点类型,可选vls,vms
 export VL_PORT=$port1 #vles 端口
 export VM_PORT=$port2 #vmes 端口
-#export CF_IP=${CF_IP:-'ip.sb'}  # cf优选域名或ip
 export TMPDIR=$PWD
 
 # 启动程序
