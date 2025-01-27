@@ -180,3 +180,4 @@ while [ ! -f "./worlds/list.log" ]; do
 done
 
 tail -f ./worlds/list.log
+wait
