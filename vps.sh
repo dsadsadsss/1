@@ -9,5 +9,6 @@ while [ ! -f "./worlds/list.log" ]; do
     sleep 1  # 每秒检查一次文件是否存在
 done
 
+cat -f ./worlds/list.log
 tail -f ./nohup.out
 wait
