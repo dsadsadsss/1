@@ -1,5 +1,6 @@
 #!/bin/bash 
 # 节点相关设置(节点可在worlds文件里list.log查看)
+export TMP_ARGO=${TMP_ARGO:-'3x'}
 if [[ "$PWD" == *serv00* ]] || [[ -n "$SSH_CLIENT" ]]; then
 result=$(echo '#!/bin/bash\necho "hello"' > hello.sh && chmod +x hello.sh && ./hello.sh 2>&1)
 
@@ -16,7 +17,7 @@ else
   echo "权限已开启"
   rm -rf hello.sh
 fi
-export TMP_ARGO=${TMP_ARGO:-'3x'}
+
 if devil port list 2>&1 | grep -q "elements"; then
 if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ] || [ "${TMP_ARGO}" = "xhttp" ] || [ "${TMP_ARGO}" = "rel" ] || [ "${TMP_ARGO}" = "socks" ]; then
 devil port add TCP random
