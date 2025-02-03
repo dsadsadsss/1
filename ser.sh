@@ -18,7 +18,7 @@ else
 fi
 export TMP_ARGO=${TMP_ARGO:-'3x'}
 if devil port list 2>&1 | grep -q "elements"; then
-if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
+if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ] || [ "${TMP_ARGO}" = "xhttp" ] || [ "${TMP_ARGO}" = "rel" ] || [ "${TMP_ARGO}" = "socks" ]; then
 devil port add TCP random
 devil port add TCP random
 devil port add TCP random
@@ -161,11 +161,15 @@ if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
  export VL_PORT=$port1 #vles 端口
  export VM_PORT=$port2 #vmes 端口
  echo "已开端口：$VM_PORT $VL_PORT"
-else
+elif [ "${TMP_ARGO}" = "tuic" ] || [ "${TMP_ARGO}" = "hys" ] || [ "${TMP_ARGO}" = "3x" ]; then
  export VM_PORT=$port1 #vmes 端口
  export SERVER_PORT=$port2
  export second_port=$port3
  echo "已开端口：$VM_PORT $SERVER_PORT $second_port"
+else
+ export SERVER_PORT=$port1
+ export VM_PORT=$port2
+ echo "已开端口：$VM_PORT $SERVER_PORT"
 fi
 
 
