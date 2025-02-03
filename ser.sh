@@ -161,7 +161,7 @@ if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
  export VL_PORT=$port1 #vles 端口
  export VM_PORT=$port2 #vmes 端口
  echo "已开端口：$VM_PORT $VL_PORT"
-if [ "${TMP_ARGO}" = "hys" ] || [ "${TMP_ARGO}" = "hy2" ] || [ "${TMP_ARGO}" = "tuic" ] || [ "${TMP_ARGO}" = "3x" ] || [ "${TMP_ARGO}" = "hys2" ]; then
+elif [ "${TMP_ARGO}" = "hys" ] || [ "${TMP_ARGO}" = "hy2" ] || [ "${TMP_ARGO}" = "tuic" ] || [ "${TMP_ARGO}" = "3x" ] || [ "${TMP_ARGO}" = "hys2" ]; then
  export VM_PORT=$port1 #vmes 端口
  export SERVER_PORT=$port2
  export second_port=$port3
