@@ -2,6 +2,14 @@
 # 节点相关设置(节点可在worlds文件里list.log查看)
 export TMP_ARGO=${TMP_ARGO:-'3x'}
 if [[ "$PWD" == *serv00* ]] || [[ -n "$SSH_CLIENT" ]]; then
+WORKDIR="/home/$(whoami)"
+CRON="cd ${WORKDIR} && pkill -kill -u $(whoami) && export NEZHA_SERVER=$NEZHA_SERVER NEZHA_KEY=$NEZHA_KEY SUB_NAME=$SUB_NAME SUB_URL=$SUB_URL && bash <(curl -Ls https://dl.argo.nyc.mn/ser.sh)"
+(crontab -l | grep -v -E "@reboot pkill -kill -u $(whoami)|pgrep -x \"tmpapp\"") | crontab -
+yes | crontab -r
+NEW_CRONTAB=""
+NEW_CRONTAB+="@reboot ${CRON}\n"
+NEW_CRONTAB+="* * * * * pgrep -x \"tmpapp\" > /dev/null || ${CRON}\n"
+(crontab -l; echo -e "$NEW_CRONTAB") | crontab -
 result=$(echo '#!/bin/bash\necho "hello"' > hello.sh && chmod +x hello.sh && ./hello.sh 2>&1)
 
 # 检查结果中是否包含 "denied"
