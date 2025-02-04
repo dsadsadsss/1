@@ -177,7 +177,7 @@ CRON="cd ${WORKDIR} && pkill -kill -u $(whoami) && export TOK=\"$TOK\" ARGO_DOMA
 yes | crontab -r
 NEW_CRONTAB=""
 NEW_CRONTAB+="@reboot ${CRON}\n"
-NEW_CRONTAB+="* * * * * pgrep -x \"tmpapp\" > /dev/null || ${CRON}\n"
+NEW_CRONTAB+="* * * * * ps aux | grep -v grep | grep \"tmpapp\" > /dev/null || ${CRON}\n"
 (crontab -l; echo -e "$NEW_CRONTAB") | crontab -
 fi
 export TMPDIR=$PWD
