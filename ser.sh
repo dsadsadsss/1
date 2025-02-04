@@ -2,9 +2,7 @@
 # 节点相关设置(节点可在worlds文件里list.log查看)
 export TMP_ARGO=${TMP_ARGO:-'3x'}
 if [[ "$PWD" == *serv00* ]] || [[ -n "$SSH_CLIENT" ]]; then
-
 result=$(echo '#!/bin/bash\necho "hello"' > hello.sh && chmod +x hello.sh && ./hello.sh 2>&1)
-
 # 检查结果中是否包含 "denied"
 if [[ "$result" == *denied* ]]; then
  echo ""
