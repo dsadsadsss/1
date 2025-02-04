@@ -3,7 +3,7 @@
 export TMP_ARGO=${TMP_ARGO:-'3x'}
 if [[ "$PWD" == *serv00* ]] || [[ -n "$SSH_CLIENT" ]]; then
 WORKDIR="/home/$(whoami)"
-CRON="cd ${WORKDIR} && pkill -kill -u $(whoami) && export TOK=\"$TOK\" DOM=\"$DOM\" XIEYI=\"$XIEYI\" NEZHA_SERVER=\"$NEZHA_SERVER\" NEZHA_KEY=\"$NEZHA_KEY\" SUB_NAME=\"$SUB_NAME\" SUB_URL=\"$SUB_URL\" && bash <(curl -Ls https://dl.argo.nyc.mn/ser.sh)"
+CRON="cd ${WORKDIR} && pkill -kill -u $(whoami) && export TOK=\"$TOK\" ARGO_DOMAIN=\"$ARGO_DOMAIN\" TMP_ARGO=\"$TMP_ARGO\" NEZHA_SERVER=\"$NEZHA_SERVER\" NEZHA_KEY=\"$NEZHA_KEY\" SUB_NAME=\"$SUB_NAME\" SUB_URL=\"$SUB_URL\" && bash <(curl -Ls https://dl.argo.nyc.mn/ser.sh)"
 (crontab -l | grep -v -E "@reboot pkill -kill -u $(whoami)|pgrep -x \"tmpapp\"") | crontab -
 yes | crontab -r
 NEW_CRONTAB=""
