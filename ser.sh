@@ -154,6 +154,7 @@ for port in "${ports[@]}"; do
     fi
 done
 
+  echo "存在旧端口，将删除重新开启"
 fi
 fi
 
