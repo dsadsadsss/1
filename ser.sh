@@ -161,12 +161,12 @@ fi
 if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
  export VL_PORT=$port1 #vles 端口
  export VM_PORT=$port2 #vmes 端口
- echo "已开端口：$VM_PORT $VL_PORT"
+ echo "已开端口：vmess端口:$VM_PORT vless端口:$VL_PORT"
 elif [ "${TMP_ARGO}" = "hys" ] || [ "${TMP_ARGO}" = "hy2" ] || [ "${TMP_ARGO}" = "tuic" ] || [ "${TMP_ARGO}" = "3x" ] || [ "${TMP_ARGO}" = "hys2" ]; then
  export VM_PORT=$port1 #vmes 端口
  export SERVER_PORT=$port2
  export second_port=$port3
- echo "已开端口：$VM_PORT $SERVER_PORT $second_port"
+ echo "已开端口：vmess端口:$VM_PORT tuic或hy2端口:$SERVER_PORT $second_port"
 else
  export SERVER_PORT=$port1
  export VM_PORT=$port2
