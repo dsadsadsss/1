@@ -166,7 +166,7 @@ elif [ "${TMP_ARGO}" = "hys" ] || [ "${TMP_ARGO}" = "hy2" ] || [ "${TMP_ARGO}" =
  export VM_PORT=$port1 #vmes 端口
  export SERVER_PORT=$port2
  export second_port=$port3
- echo "已开端口：vmess端口:$VM_PORT tuic或hy2端口:$SERVER_PORT $second_port"
+ echo "已开端口：vmess端口:$VM_PORT tuic端口:$SERVER_PORT hy2端口:$second_port"
 else
  export SERVER_PORT=$port1
  export VM_PORT=$port2
