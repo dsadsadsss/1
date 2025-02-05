@@ -190,6 +190,9 @@ sleep 10
 while [ ! -f "./worlds/list.log" ]; do
     sleep 1  # 每秒检查一次文件是否存在
 done
+echo "===========节点查看下面文件=========="
 cat ./worlds/list.log
+echo "=================================="
+sleep 5
 tail -f ./nohup.out
 wait
