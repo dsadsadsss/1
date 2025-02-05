@@ -34,7 +34,7 @@ echo "===========复制下面节点即可=========="
 cat ./worlds/list.log
 echo "=================================="
 echo ""
-echo "下面是运行日志:"
+echo "     下面是运行日志:   "
 echo ""
 tail -f ./nohup.out
 wait
