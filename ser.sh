@@ -11,9 +11,9 @@ if [[ "$result" == *denied* ]]; then
   echo ""
   echo ""
   devil binexec on
-  exit 0
+  sleep 10
 else
-  echo "权限已开启"
+  echo "权限已开启,继续安装程序"
   rm -rf hello.sh
 fi
 
