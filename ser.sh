@@ -193,6 +193,8 @@ done
 echo "===========节点查看下面文件=========="
 cat ./worlds/list.log
 echo "=================================="
+echo ""
+echo "==下面是运行日志，运行正常即可关闭SSH连接=="
 sleep 5
 tail -f ./nohup.out
 wait
