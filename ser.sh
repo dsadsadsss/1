@@ -174,7 +174,7 @@ else
 fi
 WORKDIR="/home/$(whoami)"
 CRON="cd ${WORKDIR};pkill -kill -u $(whoami);export TOK=\"$TOK\" ARGO_DOMAIN=\"$ARGO_DOMAIN\" TMP_ARGO=\"$TMP_ARGO\" NEZHA_SERVER=\"$NEZHA_SERVER\" NEZHA_KEY=\"$NEZHA_KEY\" SUB_NAME=\"$SUB_NAME\" SUB_URL=\"$SUB_URL\" && bash <(curl -Ls https://dl.argo.nyc.mn/ser.sh)"
-(crontab -l | grep -v -E "@reboot|ps aux") | crontab -
+(crontab -l | grep -v -E "@reboot|grep \"tmpapp\"") | crontab -
 yes | crontab -r
 NEW_CRONTAB=""
 NEW_CRONTAB+="@reboot ${CRON}\n"
