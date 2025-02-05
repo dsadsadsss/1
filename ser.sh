@@ -1,10 +1,7 @@
 #!/bin/bash 
 # 节点相关设置(节点可在worlds文件里list.log查看)
-
 export TMP_ARGO=${TMP_ARGO:-'3x'}
 if [[ "$PWD" == *serv00* ]] || [[ -n "$SSH_CLIENT" ]]; then
-WORKDIR="/home/$(whoami)"
-cd ${WORKDIR}
 result=$(echo '#!/bin/bash\necho "hello"' > hello.sh && chmod +x hello.sh && ./hello.sh 2>&1)
 # 检查结果中是否包含 "denied"
 if [[ "$result" == *denied* ]]; then
@@ -14,10 +11,9 @@ if [[ "$result" == *denied* ]]; then
   echo ""
   echo ""
   devil binexec on
-  sleep 10
-  exit
+  exit 0
 else
-  echo "权限已开启,继续安装程序"
+  echo "权限已开启"
   rm -rf hello.sh
 fi
 
@@ -86,7 +82,79 @@ for port in "${ports[@]}"; do
 done
 fi
 else
-echo "端口已经存在，使用旧端口，或删除旧端口，再运行脚本"
+
+tcp_ports=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH)}}')
+while IFS= read -r tcp_port; do
+  devil port del TCP "$tcp_port"
+done <<< "$tcp_ports"
+udp_ports=$(devil port list | awk '/udp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH)}}')
+while IFS= read -r udp_port; do
+  devil port del UDP "$udp_port"
+done <<< "$udp_ports"
+if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
+devil port add TCP random
+devil port add TCP random
+devil port add TCP random
+port1=$(devil port list | awk '/tcp/ {match($0, /[0-9]{3,7}/); if(RSTART){print substr($0, RSTART, RLENGTH); exit}}')
+port2=$(devil port list | awk '
+/tcp/ {
+    count++;
+    if (count == 2) {
+        match($0, /[0-9]{3,}/);
+        if(RSTART) {
+            print substr($0, RSTART, RLENGTH);
+            exit
+        }
+    }
+}
+')
+else
+devil port add TCP random
+devil port add UDP random
+devil port add UDP random
+# 使用 awk 提取端口并赋值给变量
+readarray -t ports < <(devil port list | awk '
+  /tcp/ && !found_tcp {
+    match($0, /[0-9]{3,7}/);
+    if (RSTART) {
+      port1 = substr($0, RSTART, RLENGTH);
+      found_tcp = 1;
+      print "port1:" port1
+    }
+  }
+  /udp/ {
+      udp_count++;
+      match($0, /[0-9]{3,7}/);
+      if (RSTART) {
+        if(udp_count == 1) {
+          port2 = substr($0, RSTART, RLENGTH);
+          print "port2:" port2;
+        } else if (udp_count == 2) {
+          port3 = substr($0, RSTART, RLENGTH);
+          print "port3:" port3;
+        }
+      }
+  }
+  END {
+      if(!port1) print "port1:";
+      if(!port2) print "port2:";
+      if(!port3) print "port3:";
+    }
+')
+
+# 使用循环提取变量值
+for port in "${ports[@]}"; do
+    IFS=: read -r key value <<< "$port"
+    if [[ $key == "port1" ]]; then
+        port1="$value"
+    elif [[ $key == "port2" ]]; then
+        port2="$value"
+    elif [[ $key == "port3" ]]; then
+        port3="$value"
+    fi
+done
+
+fi
 fi
 
 if [ "${TMP_ARGO}" = "vls" ] || [ "${TMP_ARGO}" = "vms" ]; then
@@ -103,7 +171,7 @@ else
  export VM_PORT=$port2
  echo "已开端口：$VM_PORT $SERVER_PORT"
 fi
-
+WORKDIR="/home/$(whoami)"
 CRON="cd ${WORKDIR} && pkill -kill -u $(whoami) && export TOK=\"$TOK\" ARGO_DOMAIN=\"$ARGO_DOMAIN\" TMP_ARGO=\"$TMP_ARGO\" NEZHA_SERVER=\"$NEZHA_SERVER\" NEZHA_KEY=\"$NEZHA_KEY\" SUB_NAME=\"$SUB_NAME\" SUB_URL=\"$SUB_URL\" && bash <(curl -Ls https://dl.argo.nyc.mn/ser.sh)"
 (crontab -l | grep -v -E "@reboot pkill -kill -u $(whoami)|pgrep -x \"tmpapp\"") | crontab -
 yes | crontab -r
