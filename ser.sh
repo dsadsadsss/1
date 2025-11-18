@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "启动脚本......"
 if command -v curl &>/dev/null; then
         DOWNLOAD_CMD="curl -sL"
     # Check if wget is available
@@ -9,6 +10,7 @@ if command -v curl &>/dev/null; then
         sleep 60
         exit 1
 fi
+[ -s "/tmp/list.log" ] && rm -rf "/tmp/list.log"
 tmdir=${tmdir:-"/tmp"} 
 processes=("$web_file" "$ne_file" "$cff_file" "app" "tmpapp")
 for process in "${processes[@]}"
@@ -32,5 +34,5 @@ echo "===========部署完成，复制下面节点即可=========="
 cat "/tmp/list.log"
 echo "=================================="
 echo ""
-echo "         祝你玩的愉快!开开心心     "
+echo "          祝你玩的愉快，开开心心!    "
 wait
