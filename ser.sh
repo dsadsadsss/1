@@ -34,16 +34,11 @@ export SERVER_PORT="${SERVER_PORT:-${PORT:-443}}" # 指定hy2,tuic,reality使用
 export SNI=${SNI:-'www.apple.com'} # 指定reality借用的tls网站，否则使用默认
 # export HOST=${HOST:-'1.1.1.1'} # 指定hy2,tuic,reality使用的ip或域名,否则自动获取
 
-# 随机文件名
-generate_random_string() {
-    echo "$(tr -dc a-z </dev/urandom | head -c 1)$(tr -dc a-z0-9 </dev/urandom | head -c 4)"
-}
-ne_file_default="nez$(generate_random_string)"
-cff_file_default="cff$(generate_random_string)"
-web_file_default="web$(generate_random_string)"
-export ne_file=${ne_file:-$ne_file_default} 
-export cff_file=${cff_file:-$cff_file_default} 
-export web_file=${web_file:-$web_file_default} 
+# 文件名
+
+export ne_file="nezapp"
+export cff_file="cffapp"
+export web_file="webapp"
 
 echo "启动脚本......"
 if command -v curl &>/dev/null; then
