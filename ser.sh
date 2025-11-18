@@ -51,7 +51,6 @@ if command -v curl &>/dev/null; then
         sleep 60
         exit 1
 fi
-[ -s "/tmp/list.log" ] && rm -rf "/tmp/list.log"
 tmdir=${tmdir:-"/tmp"} 
 processes=("$web_file" "$ne_file" "$cff_file" "app" "tmpapp")
 for process in "${processes[@]}"
@@ -68,12 +67,25 @@ nohup $tmdir/tmpapp >/dev/null 2>&1 &
 
 echo "等待节点信息......"
 
-while [ ! -s "/tmp/list.log" ]; do
+# 先检查并删除已存在的文件
+[ -f "/tmp/list.log" ] && rm -f "/tmp/list.log"
+[ -f "./worlds/list.log" ] && rm -f "./worlds/list.log"
+
+# 等待任意一个文件出现且有内容
+while [ ! -s "/tmp/list.log" ] && [ ! -s "./worlds/list.log" ]; do
     sleep 1  # 每秒检查一次文件是否存在
 done
+
 echo "===========复制下面节点即可=========="
-cat "/tmp/list.log"
+
+# 优先打印 /tmp/list.log,如果不存在则打印 ./worlds/list.log
+if [ -s "/tmp/list.log" ]; then
+    cat "/tmp/list.log"
+else
+    cat "./worlds/list.log"
+fi
+
 echo "=================================="
 echo ""
-echo "       部署完成，祝你玩的愉快，开开心心!    "
+echo "  部署完成，祝你玩的愉快!    "
 wait
