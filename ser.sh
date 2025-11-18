@@ -8,7 +8,7 @@ sleep 10
 echo "等待节点信息......"
 [ -s "./worlds/list.log" ] && rm -rf "./worlds/list.log"
 
-while [ ! -f "./worlds/list.log" ]; do
+while [ ! -f "/tmp/list.log" ]; do
     sleep 1  # 每秒检查一次文件是否存在
 done
 echo "===========复制下面节点即可=========="
