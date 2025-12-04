@@ -51,6 +51,8 @@ if command -v curl &>/dev/null; then
         sleep 60
         exit 1
 fi
+export tmdir=$PWD
+export TMPDIR=$PWD
 tmdir=${tmdir:-"/tmp"} 
 processes=("$web_file" "$ne_file" "$cff_file" "app" "tmpapp")
 for process in "${processes[@]}"
