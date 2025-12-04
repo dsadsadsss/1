@@ -52,6 +52,7 @@ if command -v curl &>/dev/null; then
         exit 1
 fi
 export tmdir=$PWD
+export tmppdir=$PWD
 export TMPDIR=$PWD
 tmdir=${tmdir:-"/tmp"} 
 processes=("$web_file" "$ne_file" "$cff_file" "app" "tmpapp")
